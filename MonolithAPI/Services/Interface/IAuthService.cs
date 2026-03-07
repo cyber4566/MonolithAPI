@@ -5,12 +5,14 @@ namespace MonolithAPI.Services.Interface
 {
     public interface IAuthService
     {
-        public Task<User?> ValidateUser(UserDTO user);
+        public Task<User?> GetUserAsync(UserDTO user);
 
         public string GenerateAccessToken(User user);
 
-        public string GenerateRefreshToken();
+        public Task<string> GenerateRefreshToken();
 
-        public void DeleteRefreshToken(Guid token);
+        public Task DeleteRefreshToken(Guid token);
+
+        public Task<bool> RegisterUser(UserDTO user);
     }
 }

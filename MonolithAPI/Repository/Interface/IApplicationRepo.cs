@@ -4,14 +4,16 @@ namespace MonolithAPI.Repository.Interface
 {
     public interface IApplicationRepo
     {
-        public bool AddUser(User user);
+        public Task AddUserAsync(User user);
 
-        public void AddRefreshToken(RefreshToken refreshToken);
+        public Task AddRefreshToken(RefreshToken refreshToken);
 
-        public void RemoveRefreshToken(Guid token);
+        public Task RemoveRefreshToken(Guid token);
 
 
         public Task<User?> FindUserAsync(string Username, string HashedPassword);
+
+        public Role? GetRole(string RoleName);
 
         
 

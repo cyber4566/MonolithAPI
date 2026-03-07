@@ -18,14 +18,16 @@ namespace MonolithAPI.Repository.Implementation
         
 
 
-        public void AddRefreshToken(RefreshToken refreshToken)
+        public async Task AddRefreshToken(RefreshToken refreshToken)
         {
-            throw new NotImplementedException();
+            await _dbContext.refreshTokens.AddAsync(refreshToken);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public bool AddUser(User user)
+        public async Task AddUserAsync(User user)
         {
-            throw new NotImplementedException();
+            await _dbContext.users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<User?> FindUserAsync(string Username, string HashedPassword)
@@ -37,9 +39,19 @@ namespace MonolithAPI.Repository.Implementation
 
 
 
-        public void RemoveRefreshToken(Guid token)
+        public async Task RemoveRefreshToken(Guid token)
         {
-            throw new NotImplementedException();
+            await _dbContext.refreshTokens.Where(x=>x.refreshToken == token).ExecuteDeleteAsync();
+        }
+
+        public Role? GetRole(string RoleName) {
+
+            var role = _dbContext.Roles.FirstOrDefault(x=> x.RoleName.Equals(RoleName));
+
+            return role;
+        
+        
+        
         }
 
 
