@@ -66,7 +66,7 @@ namespace MonolithAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize()]
+        [Authorize(Roles ="Normal")]
         [Route("test-auth")]
         public ActionResult test() {
 
