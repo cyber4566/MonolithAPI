@@ -6,6 +6,8 @@ using MonolithAPI.DBContext;
 using MonolithAPI.Mapping;
 using MonolithAPI.Repository.Implementation;
 using MonolithAPI.Repository.Interface;
+using MonolithAPI.Services.Implementation;
+using MonolithAPI.Services.Interface;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IApplicationRepo,ApplicationRepo>();
 
@@ -43,15 +47,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+builder.Services.AddScoped<IApplicationRepo,ApplicationRepo>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+
+    app.UseSwagger();
+    app.UseSwaggerUI(
+        
+        );
+
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

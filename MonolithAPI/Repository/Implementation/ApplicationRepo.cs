@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MonolithAPI.DBContext;
 using MonolithAPI.Models;
 using MonolithAPI.Repository.Interface;
@@ -30,10 +31,38 @@ namespace MonolithAPI.Repository.Implementation
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<User?> FindUserAsync(string Username, string HashedPassword)
+        public async Task<User?> FindUserAsync(string Username, string password, PasswordHasher<string> hasher)
         {
-            var user = await _dbContext.users.FirstOrDefaultAsync(x => x.Username == Username & x.HashedPassword == HashedPassword);
-            return user;
+            var user = await _dbContext.users.Include(u => u.Role).FirstOrDefaultAsync(x => x.Username == Username);
+
+            if (user == null)
+            {
+
+                return null;
+
+            }
+
+            else {
+
+                var passwordVerification = hasher.VerifyHashedPassword(user.Username,user.HashedPassword,password);
+
+                if (passwordVerification == PasswordVerificationResult.Success || passwordVerification == PasswordVerificationResult.SuccessRehashNeeded)
+                {
+
+                    return user;
+
+                }
+                else {
+
+                    return null;
+                
+                }
+
+
+            
+            }
+
+                
         }
 
 
@@ -46,12 +75,30 @@ namespace MonolithAPI.Repository.Implementation
 
         public Role? GetRole(string RoleName) {
 
-            var role = _dbContext.Roles.FirstOrDefault(x=> x.RoleName.Equals(RoleName));
+            var role = _dbContext.Role.FirstOrDefault(x=> x.RoleName.Equals(RoleName));
 
             return role;
         
         
         
+        }
+
+        public async Task<User?> FindUserAsync(string Username) {
+
+            var user = await _dbContext.users.Include(u => u.Role).FirstOrDefaultAsync(x => x.Username == Username);
+
+            if (user == null)
+            {
+
+                return null;
+
+            }
+            else {
+
+                return user;
+            
+            }
+
         }
 
 

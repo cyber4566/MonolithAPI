@@ -9,10 +9,10 @@ namespace MonolithAPI.Services.Interface
 
         public string GenerateAccessToken(User user);
 
-        public Task<string> GenerateRefreshToken();
+        public Task<RefreshToken> GenerateRefreshToken();
 
         public Task DeleteRefreshToken(Guid token);
 
-        public Task<bool> RegisterUser(UserDTO user);
+        public Task<bool> RegisterUserAsync(UserDTO user);
     }
 }

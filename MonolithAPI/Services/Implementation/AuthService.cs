@@ -42,11 +42,11 @@ namespace MonolithAPI.Services.Implementation
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JWTSettings").GetValue<string>("SymmetricKey")!));
 
-            var cred = new SigningCredentials(key,SecurityAlgorithms.Aes256Encryption);
+            var cred = new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
 
             var tokendescriptor = new JwtSecurityToken(
                       issuer:_config.GetSection("JWTSettings").GetValue<string>("Issuer"),
-                      audience: _config.GetSection("JWTSettings").GetValue<string>("Issuer"),
+                      audience: _config.GetSection("JWTSettings").GetValue<string>("Audience"),
                       claims: claims,
                       signingCredentials: cred,
                       expires: DateTime.UtcNow.AddMinutes(3)
@@ -57,30 +57,30 @@ namespace MonolithAPI.Services.Implementation
 
         }
 
-        public async Task<string> GenerateRefreshToken()
+        public async Task<RefreshToken> GenerateRefreshToken()
         {
 
             var userRefreshToken = new RefreshToken();
             
             await _repo.AddRefreshToken(userRefreshToken);
 
-            return userRefreshToken.refreshToken.ToString();
+            return userRefreshToken;
         }
 
         public async Task<User?> GetUserAsync(UserDTO user)
         {
             var passwordHasher = new PasswordHasher<string>();
 
-            string hashedPassword = passwordHasher.HashPassword(user.Username,user.Password);
+            
 
-            var foundUser = await _repo.FindUserAsync(user.Username,hashedPassword);
+            var foundUser = await _repo.FindUserAsync(user.Username,user.Password,passwordHasher);
 
             return foundUser;
         }
 
-        public async Task<bool> RegisterUser(UserDTO userDTO)
+        public async Task<bool> RegisterUserAsync(UserDTO userDTO)
         {
-            var foundUser = await GetUserAsync(userDTO);
+            var foundUser = await _repo.FindUserAsync(userDTO.Username);
             if (foundUser != null)
             {
 

@@ -11,7 +11,7 @@ namespace MonolithAPI.DBContext
 
         public DbSet<RefreshToken> refreshTokens { get; set; }
 
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<Role> Role { get; set; }
 
 
 

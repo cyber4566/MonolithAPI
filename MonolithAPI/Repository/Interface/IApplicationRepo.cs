@@ -1,4 +1,5 @@
-﻿using MonolithAPI.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using MonolithAPI.Models;
 
 namespace MonolithAPI.Repository.Interface
 {
@@ -11,7 +12,9 @@ namespace MonolithAPI.Repository.Interface
         public Task RemoveRefreshToken(Guid token);
 
 
-        public Task<User?> FindUserAsync(string Username, string HashedPassword);
+        public Task<User?> FindUserAsync(string Username, string HashedPassword, PasswordHasher<string> passwordHasher);
+
+        public Task<User?> FindUserAsync(String Username);
 
         public Role? GetRole(string RoleName);
 
