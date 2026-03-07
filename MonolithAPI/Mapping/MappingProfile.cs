@@ -8,12 +8,12 @@ namespace MonolithAPI.Mapping
 {
     public class MappingProfile:Profile
     {
-        private IApplicationRepo _repo;
+        
 
 
-        public MappingProfile(IApplicationRepo repo)
+        public MappingProfile()
         {
-            _repo = repo;
+            
 
 
 
