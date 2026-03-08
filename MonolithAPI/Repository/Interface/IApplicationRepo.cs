@@ -18,6 +18,8 @@ namespace MonolithAPI.Repository.Interface
 
         public Role? GetRole(string RoleName);
 
+        public Task<RefreshToken?> GetRefreshToken(Guid token);
+
         
 
 

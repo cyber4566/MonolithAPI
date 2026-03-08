@@ -27,7 +27,7 @@ namespace MonolithAPI.Services.Implementation
             _mapper = mapper;
         }
 
-        public async Task DeleteRefreshToken(Guid token)
+        public async Task DeleteRefreshTokenAsync(Guid token)
         {
             await _repo.RemoveRefreshToken(token);
         }
@@ -97,6 +97,27 @@ namespace MonolithAPI.Services.Implementation
                  await _repo.AddUserAsync(user);
                 return true;
             }
+        }
+
+        public async Task<bool> RefreshTokenExistsAsync(Guid refreshToken) { 
+        
+             var foundToken = await _repo.GetRefreshToken(refreshToken);
+
+            if (foundToken != null)
+            {
+
+                return true;
+
+            }
+            else { 
+            
+               return false;
+            
+            }
+        
+        
+        
+        
         }
     }
 }

@@ -49,7 +49,7 @@ namespace MonolithAPI.Controllers
         [Route("Register")]
         public async Task<ActionResult> Register(UserDTO user) {
 
-            var registered = await _authService.RegisterUserAsync(user);
+            bool registered = await _authService.RegisterUserAsync(user);
 
             if (registered)
             {
@@ -64,6 +64,42 @@ namespace MonolithAPI.Controllers
 
                 
         }
+
+        [HttpPost]
+        [Route("Refresh")]
+        public async Task<ActionResult> Refresh(Guid refreshToken) { 
+        
+             bool foundRefreshToken = await _authService.RefreshTokenExistsAsync(refreshToken);
+
+             if (foundRefreshToken) {
+
+                await _authService.DeleteRefreshTokenAsync(refreshToken);
+
+                var new_accessToken = _authService.GenerateAccessToken(foundUser);
+                var new_refreshToken = await _authService.GenerateRefreshToken();
+
+                var responseDTO = new TokenResponseDTO
+                {
+
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                };
+
+                return Ok(responseDTO);
+
+            }
+
+            else
+            {
+                return Unauthorized("Invalid refresh token");
+            }
+
+
+
+
+        }
+
+
 
         [HttpGet]
         [Authorize(Roles ="Normal")]
