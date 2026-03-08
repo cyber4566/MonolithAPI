@@ -30,7 +30,7 @@ It issues **access tokens** for API requests and **refresh tokens** to maintain 
 
 ## Authentication Flow
 
-1. User logs in with credentials.
+1. User logs in with username and password.
 2. API returns:
 
    * **Access Token** (short-lived)
