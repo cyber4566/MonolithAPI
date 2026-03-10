@@ -50,9 +50,9 @@ It issues **access tokens** for API requests and **refresh tokens** to maintain 
 
 | Method | Endpoint        | Description          |
 | ------ | --------------- | -------------------- |
-| POST   | `/auth/login`   | Authenticate user    |
-| POST   | `/auth/refresh` | Refresh access token |
-| POST   | `/auth/logout`  | Revoke refresh token |
+| POST   | `/Authapi/login`   | Authenticate user    |
+| POST   | `/Authapi/refresh` | Refresh access token |
+| POST   | `/Authapi/register`  | Register first time users |
 
 ---
 
