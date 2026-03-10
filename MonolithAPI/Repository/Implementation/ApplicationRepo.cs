@@ -103,7 +103,7 @@ namespace MonolithAPI.Repository.Implementation
 
         public async Task<RefreshToken?> GetRefreshToken(Guid token) {
 
-            var refreshToken = await _dbContext.refreshTokens.FirstOrDefaultAsync(x=> x.refreshToken == token);
+            var refreshToken = await _dbContext.refreshTokens.Include(r => r.User).ThenInclude(u => u.Role).FirstOrDefaultAsync(x=> x.refreshToken == token);
 
             return refreshToken;
                 

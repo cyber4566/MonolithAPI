@@ -15,6 +15,9 @@ namespace MonolithAPI.Models
         [Required]
         public DateTime ExpireAt { get; set; } = DateTime.UtcNow.AddHours(5);
 
+        [Required]
+        public User User { get; set; }
+
 
 
 

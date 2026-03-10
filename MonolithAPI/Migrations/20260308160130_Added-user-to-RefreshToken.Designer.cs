@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MonolithAPI.DBContext;
 
@@ -11,9 +12,11 @@ using MonolithAPI.DBContext;
 namespace MonolithAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260308160130_Added-user-to-RefreshToken")]
+    partial class AddedusertoRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,13 +37,7 @@ namespace MonolithAPI.Migrations
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("refreshToken");
-
-                    b.HasIndex("Username");
 
                     b.ToTable("refreshTokens");
                 });
@@ -79,17 +76,6 @@ namespace MonolithAPI.Migrations
                     b.HasIndex("RoleID");
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("MonolithAPI.Models.RefreshToken", b =>
-                {
-                    b.HasOne("MonolithAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MonolithAPI.Models.User", b =>

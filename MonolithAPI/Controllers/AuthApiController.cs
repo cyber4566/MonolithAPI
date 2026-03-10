@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MonolithAPI.DTO;
+using MonolithAPI.Models;
 using MonolithAPI.Services.Interface;
 
 namespace MonolithAPI.Controllers
@@ -29,12 +30,12 @@ namespace MonolithAPI.Controllers
             else {
 
                 var accessToken = _authService.GenerateAccessToken(foundUser);
-                var refreshToken = await _authService.GenerateRefreshToken();
+                var refreshToken = await _authService.GenerateRefreshToken(foundUser);
 
                 var responseDTO = new TokenResponseDTO { 
                 
                        AccessToken = accessToken,
-                       RefreshToken = refreshToken
+                       RefreshToken = refreshToken.refreshToken
                 };
 
                 return Ok(responseDTO);
@@ -69,25 +70,38 @@ namespace MonolithAPI.Controllers
         [Route("Refresh")]
         public async Task<ActionResult> Refresh(Guid refreshToken) { 
         
-             bool foundRefreshToken = await _authService.RefreshTokenExistsAsync(refreshToken);
+             RefreshToken? foundRefreshToken = await _authService.GetRefreshTokenAsync(refreshToken);
 
-             if (foundRefreshToken) {
+             if (foundRefreshToken != null) {
 
-                await _authService.DeleteRefreshTokenAsync(refreshToken);
 
-                var new_accessToken = _authService.GenerateAccessToken(foundUser);
-                var new_refreshToken = await _authService.GenerateRefreshToken();
-
-                var responseDTO = new TokenResponseDTO
+                if (foundRefreshToken.ExpireAt > DateTime.Now)
                 {
 
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken
-                };
+                    User user = foundRefreshToken.User;
 
-                return Ok(responseDTO);
+                    await _authService.DeleteRefreshTokenAsync(foundRefreshToken.refreshToken);
 
-            }
+                    var new_accessToken = _authService.GenerateAccessToken(user);
+                    var new_refreshToken = await _authService.GenerateRefreshToken(user);
+
+                    var responseDTO = new TokenResponseDTO
+                    {
+
+                        AccessToken = new_accessToken,
+                        RefreshToken = new_refreshToken.refreshToken
+                    };
+
+                    return Ok(responseDTO);
+
+                }
+                else {
+
+                    return BadRequest("Refresh token expired");
+                }
+                
+
+             }
 
             else
             {

@@ -7,7 +7,7 @@ namespace MonolithAPI.DTO
     {
         public string AccessToken { get; set; } = string.Empty;
         
-        public RefreshToken RefreshToken { get; set; }
+        public Guid RefreshToken { get; set; }
 
 
 

@@ -57,10 +57,11 @@ namespace MonolithAPI.Services.Implementation
 
         }
 
-        public async Task<RefreshToken> GenerateRefreshToken()
+        public async Task<RefreshToken> GenerateRefreshToken(User user)
         {
 
             var userRefreshToken = new RefreshToken();
+            userRefreshToken.User = user;
             
             await _repo.AddRefreshToken(userRefreshToken);
 
@@ -99,21 +100,11 @@ namespace MonolithAPI.Services.Implementation
             }
         }
 
-        public async Task<bool> RefreshTokenExistsAsync(Guid refreshToken) { 
+        public async Task<RefreshToken?> GetRefreshTokenAsync(Guid refreshToken) { 
         
              var foundToken = await _repo.GetRefreshToken(refreshToken);
 
-            if (foundToken != null)
-            {
-
-                return true;
-
-            }
-            else { 
-            
-               return false;
-            
-            }
+             return foundToken; 
         
         
         
