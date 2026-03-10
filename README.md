@@ -30,13 +30,17 @@ It issues **access tokens** for API requests and **refresh tokens** to maintain 
 
 ## Authentication Flow
 
-1. User logs in with credentials.
+1. User logs in with username and password.
 2. API returns:
 
    * **Access Token** (short-lived)
    * **Refresh Token** (long-lived)
+<img width="1422" height="292" alt="image" src="https://github.com/user-attachments/assets/0c8a7be7-ab21-460e-8c69-193b6c4d05af" />
+
 3. Access token is used to access protected endpoints. Access token also contains user roles for authorization.
-4. When the access token expires, the refresh token is used to obtain a new access token and refresh token. The previous refresh token is deleted. 
+4. When the access token expires, the refresh token is used to obtain a new access token and refresh token. The previous refresh token is deleted and invalidated.
+<img width="1419" height="782" alt="image" src="https://github.com/user-attachments/assets/b2c8e360-ad9e-4ac0-8a80-cb1a541aa850" />
+ 
 
 ---
 
@@ -46,9 +50,9 @@ It issues **access tokens** for API requests and **refresh tokens** to maintain 
 
 | Method | Endpoint        | Description          |
 | ------ | --------------- | -------------------- |
-| POST   | `/auth/login`   | Authenticate user    |
-| POST   | `/auth/refresh` | Refresh access token |
-| POST   | `/auth/logout`  | Revoke refresh token |
+| POST   | `/Authapi/login`   | Authenticate user    |
+| POST   | `/Authapi/refresh` | Refresh access token |
+| POST   | `/Authapi/register`  | Register first time users |
 
 ---
 
