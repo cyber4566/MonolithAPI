@@ -45,6 +45,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 });
 
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowUI", policy => { 
+    
+         policy.AllowAnyHeader();
+         policy.WithOrigins("http://localhost:4200");
+         policy.AllowAnyMethod();
+    });
+
+});
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddScoped<IApplicationRepo,ApplicationRepo>();
@@ -59,7 +70,7 @@ var app = builder.Build();
         
         );
 
-
+app.UseCors("AllowUI");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
