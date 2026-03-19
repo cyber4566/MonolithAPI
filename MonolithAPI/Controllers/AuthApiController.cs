@@ -24,21 +24,44 @@ namespace MonolithAPI.Controllers
         [Route("login")]
         public async Task<ActionResult> Login(UserDTO user)
         {
-            var foundUser = await _authService.GetUserAsync(user);
+            if (ModelState.IsValid)
+            {
+                try
+                {
 
-            if (foundUser == null) { return BadRequest("Username and/or password is invalid"); }
+                    var foundUser = await _authService.GetUserAsync(user);
+
+                    if (foundUser == null) { return BadRequest("Username and/or password is invalid"); }
+                    else
+                    {
+
+                        var accessToken = _authService.GenerateAccessToken(foundUser);
+                        var refreshToken = await _authService.GenerateRefreshToken(foundUser);
+
+                        var responseDTO = new TokenResponseDTO
+                        {
+
+                            AccessToken = accessToken,
+                            RefreshToken = refreshToken.refreshToken
+                        };
+
+                        return Ok(responseDTO);
+                    }
+
+
+
+
+                }
+                catch (Exception ex) { throw ex; }
+
+
+
+
+            }
             else {
 
-                var accessToken = _authService.GenerateAccessToken(foundUser);
-                var refreshToken = await _authService.GenerateRefreshToken(foundUser);
-
-                var responseDTO = new TokenResponseDTO { 
-                
-                       AccessToken = accessToken,
-                       RefreshToken = refreshToken.refreshToken
-                };
-
-                return Ok(responseDTO);
+                return BadRequest("Data sent to api is invalid");
+            
             }
 
 
@@ -50,17 +73,38 @@ namespace MonolithAPI.Controllers
         [Route("Register")]
         public async Task<ActionResult> Register(UserDTO user) {
 
-            bool registered = await _authService.RegisterUserAsync(user);
-
-            if (registered)
+            if (ModelState.IsValid)
             {
+                try
+                {
 
-                return Ok("User registered successfully. You can login now");
+                    bool registered = await _authService.RegisterUserAsync(user);
+
+                    if (registered)
+                    {
+
+                        return Ok("User registered successfully. You can login now");
+                    }
+                    else
+                    {
+
+                        return BadRequest("User registration failed. User possibly already exists in the system");
+
+                    }
+
+
+
+
+
+
+                }
+                catch (Exception ex) { throw ex; }
+
+
             }
             else {
 
-                return BadRequest("User registration failed. User possibly already exists in the system");
-            
+                return BadRequest("Data sent is invalid");
             }
 
                 
@@ -68,44 +112,65 @@ namespace MonolithAPI.Controllers
 
         [HttpPost]
         [Route("Refresh")]
-        public async Task<ActionResult> Refresh(Guid refreshToken) { 
-        
-             RefreshToken? foundRefreshToken = await _authService.GetRefreshTokenAsync(refreshToken);
+        public async Task<ActionResult> Refresh(Guid refreshToken) {
 
-             if (foundRefreshToken != null) {
-
-
-                if (foundRefreshToken.ExpireAt > DateTime.Now)
+            if (ModelState.IsValid)
+            {
+                try
                 {
 
-                    User user = foundRefreshToken.User;
 
-                    await _authService.DeleteRefreshTokenAsync(foundRefreshToken.refreshToken);
+                    RefreshToken? foundRefreshToken = await _authService.GetRefreshTokenAsync(refreshToken);
 
-                    var new_accessToken = _authService.GenerateAccessToken(user);
-                    var new_refreshToken = await _authService.GenerateRefreshToken(user);
-
-                    var responseDTO = new TokenResponseDTO
+                    if (foundRefreshToken != null)
                     {
 
-                        AccessToken = new_accessToken,
-                        RefreshToken = new_refreshToken.refreshToken
-                    };
 
-                    return Ok(responseDTO);
+                        if (foundRefreshToken.ExpireAt > DateTime.Now)
+                        {
+
+                            User user = foundRefreshToken.User;
+
+                            await _authService.DeleteRefreshTokenAsync(foundRefreshToken.refreshToken);
+
+                            var new_accessToken = _authService.GenerateAccessToken(user);
+                            var new_refreshToken = await _authService.GenerateRefreshToken(user);
+
+                            var responseDTO = new TokenResponseDTO
+                            {
+
+                                AccessToken = new_accessToken,
+                                RefreshToken = new_refreshToken.refreshToken
+                            };
+
+                            return Ok(responseDTO);
+
+                        }
+                        else
+                        {
+
+                            return BadRequest("Refresh token expired");
+                        }
+
+
+                    }
+
+                    else
+                    {
+                        return Unauthorized("Invalid refresh token");
+                    }
+
 
                 }
-                else {
+                catch (Exception ex) { throw ex; }
 
-                    return BadRequest("Refresh token expired");
-                }
-                
 
-             }
-
-            else
-            {
-                return Unauthorized("Invalid refresh token");
+            }
+            else { 
+            
+                 return BadRequest("Data sent is invalid");
+            
+            
             }
 
 
@@ -116,7 +181,7 @@ namespace MonolithAPI.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles ="Normal")]
+        [Authorize(Roles ="Normal,Admin")]
         [Route("test-auth")]
         public ActionResult test() {
 
