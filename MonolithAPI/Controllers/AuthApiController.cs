@@ -83,7 +83,7 @@ namespace MonolithAPI.Controllers
                     if (registered)
                     {
 
-                        return Ok("User registered successfully. You can login now");
+                        return Ok();
                     }
                     else
                     {
