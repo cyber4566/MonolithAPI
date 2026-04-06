@@ -17,7 +17,7 @@ variables:
 stages:
 
 # =========================
-# 🏗️ BUILD STAGE
+#  BUILD STAGE
 # =========================
 - stage: Build
   displayName: "Build & Publish"
@@ -53,7 +53,7 @@ stages:
 
 
 # =========================
-# 🚀 DEPLOY STAGE
+#  DEPLOY STAGE
 # =========================
 - stage: Deploy
   displayName: "Deploy to Azure Web App"
