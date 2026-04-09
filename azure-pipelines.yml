@@ -29,7 +29,12 @@ stages:
           inputs:
             packageType: 'sdk'
             version: '$(dotnetVersion)'
-
+        
+        - task: FileTransform@2
+          inputs:
+            folderPath: $(System.DefaultWorkingDirectory)
+            jsonTargetFiles: '**/appsettings.json'
+            
         - script: dotnet restore
           displayName: "Restore dependencies"
 
