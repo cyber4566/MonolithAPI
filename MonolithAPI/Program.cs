@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,18 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+var keyVaultUrl = new Uri("https://secretmanager1.vault.azure.net/");
+
+builder.Configuration.AddAzureKeyVault(
+    keyVaultUrl,
+        new ClientSecretCredential(
+        builder.Configuration["AppRegistration:TenantID"],
+        builder.Configuration["AppRegistration:ClientID"],
+        builder.Configuration["AppRegistration:ClientSecret"]
+    )
+);
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
