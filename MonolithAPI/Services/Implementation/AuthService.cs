@@ -16,10 +16,10 @@ namespace MonolithAPI.Services.Implementation
     public class AuthService:IAuthService
     {
 
-        private IApplicationRepo _repo;
+        private ISecurityRepository _repo;
         private IConfiguration _config;
         private IMapper _mapper;
-        public AuthService(IApplicationRepo repo, IConfiguration config, IMapper mapper)
+        public AuthService(ISecurityRepository repo, IConfiguration config, IMapper mapper)
         {
 
             _repo = repo;

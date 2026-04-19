@@ -13,6 +13,7 @@ namespace MonolithAPI.DBContext
 
         public DbSet<Role> Role { get; set; }
 
+        public DbSet<CalenderEvent> CalenderEvents { get; set; }
 
 
     }

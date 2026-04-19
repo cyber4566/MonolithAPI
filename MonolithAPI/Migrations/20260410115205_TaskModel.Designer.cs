@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MonolithAPI.DBContext;
 
@@ -11,9 +12,11 @@ using MonolithAPI.DBContext;
 namespace MonolithAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260410115205_TaskModel")]
+    partial class TaskModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,38 +24,6 @@ namespace MonolithAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("MonolithAPI.Models.CalenderEvent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AllDay")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Username");
-
-                    b.ToTable("CalenderEvents");
-                });
 
             modelBuilder.Entity("MonolithAPI.Models.RefreshToken", b =>
                 {
@@ -113,15 +84,30 @@ namespace MonolithAPI.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("MonolithAPI.Models.CalenderEvent", b =>
+            modelBuilder.Entity("MonolithAPI.Models.UserTask", b =>
                 {
-                    b.HasOne("MonolithAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("User");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Username");
+
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("MonolithAPI.Models.RefreshToken", b =>
@@ -144,6 +130,17 @@ namespace MonolithAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("MonolithAPI.Models.UserTask", b =>
+                {
+                    b.HasOne("MonolithAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Username")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

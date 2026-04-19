@@ -6,11 +6,11 @@ using MonolithAPI.Repository.Interface;
 
 namespace MonolithAPI.Repository.Implementation
 {
-    public class ApplicationRepo : IApplicationRepo
+    public class SecurityRepository : ISecurityRepository
     {
         private ApplicationDBContext _dbContext;
 
-        public ApplicationRepo(ApplicationDBContext dbContext) { 
+        public SecurityRepository(ApplicationDBContext dbContext) { 
         
             _dbContext = dbContext;
         }

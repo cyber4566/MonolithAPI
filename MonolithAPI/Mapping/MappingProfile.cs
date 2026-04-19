@@ -21,6 +21,8 @@ namespace MonolithAPI.Mapping
 
             CreateMap<UserDTO, User>().
             ForMember(dest=> dest.HashedPassword ,opt => opt.MapFrom(src => passwordHasher.HashPassword(src.Username,src.Password)));
+
+            CreateMap<AddCalenderEventDTO, CalenderEvent>();
             
         }
 

@@ -49,7 +49,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddScoped<IApplicationRepo,ApplicationRepo>();
+builder.Services.AddScoped<ISecurityRepository,SecurityRepository>();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => {
 
@@ -87,7 +87,9 @@ builder.Services.AddCors(options => {
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-builder.Services.AddScoped<IApplicationRepo,ApplicationRepo>();
+builder.Services.AddScoped<ISecurityRepository,SecurityRepository>();
+builder.Services.AddScoped<ICalenderRepository,CalenderRepository>();
+builder.Services.AddScoped<ICalenderService, CalenderService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();

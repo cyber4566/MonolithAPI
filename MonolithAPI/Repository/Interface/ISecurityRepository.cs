@@ -3,7 +3,7 @@ using MonolithAPI.Models;
 
 namespace MonolithAPI.Repository.Interface
 {
-    public interface IApplicationRepo
+    public interface ISecurityRepository
     {
         public Task AddUserAsync(User user);
 
@@ -13,6 +13,7 @@ namespace MonolithAPI.Repository.Interface
 
 
         public Task<User?> FindUserAsync(string Username, string HashedPassword, PasswordHasher<string> passwordHasher);
+
 
         public Task<User?> FindUserAsync(String Username);
 
