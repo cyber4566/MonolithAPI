@@ -26,10 +26,22 @@ namespace MonolithAPI.Services.Implementation
             if (user != null) { 
             
                     var calenderEvent = mapper.Map<CalenderEvent>(addCalenderEventDTO);
-                calenderEvent.User = user;
+                    calenderEvent.User = user;
+                    await calenderRepository.saveCalenderEvents(calenderEvent);
             
             
             }
         }
+
+        public List<CalenderEvent>? CalenderEvents(string username) {
+
+            return calenderRepository.getCalenderEvents(username);
+        }
+
+        public async Task deleteCalenderEvent(int eventID) {
+
+            await calenderRepository.deleteCalenderEvent(eventID);
+        }
+
     }
 }
