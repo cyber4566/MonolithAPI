@@ -12,12 +12,12 @@ pool:
 
 
 variables:
-  -group: vg-MonolithAPI-prod
-  buildConfiguration: 'Release'
-  dotnetVersion: '9.0.x'
 
-  webAppName: '$(WEB_APP_NAME)'
-  resourceGroupName: '$(RESOURCE_GROUP)'
+  - group: vg-MonolithAPI-prod 
+
+
+
+
 
 stages:
 
