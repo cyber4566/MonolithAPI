@@ -12,6 +12,10 @@ namespace MonolithAPI.Controllers
         public CalenderController(CalenderService calenderService) { 
            this.calenderService = calenderService;
         }
+
+
+        [HttpPost]
+        [Route("AddCalenderEvent")]
         public async Task<ActionResult> AddCalenderEvent(AddCalenderEventDTO addCalenderEventDTO)
         {
             try {
