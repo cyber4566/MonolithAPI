@@ -40,25 +40,27 @@ stages:
             folderPath: $(System.DefaultWorkingDirectory)
             jsonTargetFiles: '**/appsettings.json'
             
-        - script: dotnet restore
-          displayName: "Restore dependencies"
-
-        - script: dotnet build --configuration $(buildConfiguration) --no-restore
-          displayName: "Build project"
-
-        - script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --no-build
-          displayName: "Publish app"
-
-        - task: ArchiveFiles@2
-          displayName: "Archive publish output"
+        - task : DotNetCoreCLI@2
+          displayName: 'restore packages'
           inputs:
-            rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-            includeRootFolder: false
-            archiveType: 'zip'
-            archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
-            replaceExistingArchive: true
-
-        - publish: '$(Build.ArtifactStagingDirectory)/app.zip'
+            command : restore
+              
+        - task : DotNetCoreCLI@2
+          displayName: 'building project files' 
+          inputs:
+            command : build
+            arguments: '--configuration $(buildConfiguration) --no-restore' 
+        
+        - task : DotNetCoreCLI@2
+          displayName: 'publishing'
+          inputs:
+            command : publish
+            publishWebProjects: false
+            projects: '**/*.csproj'
+            arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --no-build'
+            zipAfterPublish: true 
+        
+        - publish: '$(Build.ArtifactStagingDirectory)'
           artifact: drop
 
 
@@ -84,6 +86,6 @@ stages:
                 inputs:
                   azureSubscription: '$(AZURE_SERVICE_CONNECTION)'
                   appName: '$(WEB_APP_NAME)'
-                  package: '$(Pipeline.Workspace)/drop/app.zip'
+                  package: '$(Pipeline.Workspace)/drop/MonolithAPI.zip'
                   resourceGroupName: '$(RESOURCE_GROUP)'
                   appType: 'webApp'
